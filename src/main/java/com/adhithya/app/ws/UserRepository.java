@@ -16,8 +16,11 @@ import com.adhithya.app.ws.io.entity.UserEntity;
 // datatype of id field 
 
 //this by default takes care of the crus operations
+
+//in addition to the functions present in the crudrespository we can make use of our own business logic within this class 
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long> 
 {
-		
+	// the method name should be in accordance to the pattern, the fieldname should be in capitals and we should make use of By
+	UserEntity findByEmail(String email);
 }
