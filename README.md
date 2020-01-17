@@ -1,6 +1,9 @@
 # User-registration-flow
 This project focuses on understanding user registration flow using springboot, jpa and mysql. The documentation below is for my own understanding of user registration flow in Springboot. It doesnt conform to any guidelines.
 
+
+![Layers of Seperation](Images/layers.jpg)
+
 # Annotations used in this project
 
 | @RestController - | This will register the class as rest controller and will receive http requests |
