@@ -5,9 +5,8 @@ This project focuses on understanding user registration flow using springboot, j
 ![Layers of Seperation](Images/layers.jpg)
 
 # Annotations used in this project
-
+| Annotation | Uses overview |
 | @RestController - | This will register the class as rest controller and will receive http requests |
-| --- | --- |
 | @RequestMapping(&quot;users&quot;) - | Starts with user. [http://localhost:8080/users](http://localhost:8080/users) |
 | @GetMapping  - | Added to each functions to bind to get call or post call |
 | @PostMapping, @PutMapping, @DeleteMapping - | Each denoting  calls |
