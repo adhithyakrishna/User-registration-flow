@@ -1,9 +1,10 @@
 package com.adhithya.app.ws.service.impl;
 
-import javax.management.RuntimeErrorException;
+import java.util.ArrayList;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -62,11 +63,21 @@ public class UserServiceImpl implements UserService {
 	/*
 	 * This method is given to us by spring security when userservice class extended
 	 * UserDetailsService. The load by username function is provided by spring security as well
+	 * 
+	 * This method is used to load user information from the database using username,
+	 * In our application the unique identifier is email
 	 */
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+			UserEntity userEntity = userRepository.findByEmail(email);
+			if(userEntity == null)
+			{
+				//exception provided by spring framework
+				throw new UsernameNotFoundException(email);
+			}
+			
+			//user implements user details so we can return user instead of userdetails
+			return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 
 }

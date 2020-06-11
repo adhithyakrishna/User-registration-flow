@@ -1,10 +1,5 @@
 package com.adhithya.app.ws.ui.controller;
 
-import com.adhithya.app.ws.service.UserService;
-import com.adhithya.app.ws.shared.dto.UserDto;
-import com.adhithya.app.ws.ui.model.request.*;
-import com.adhithya.app.ws.ui.model.response.UserRest;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +9,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.adhithya.app.ws.service.UserService;
+import com.adhithya.app.ws.shared.dto.UserDto;
+import com.adhithya.app.ws.ui.model.request.UserDetailsRequestModel;
+import com.adhithya.app.ws.ui.model.response.UserRest;
 
 /*
  * Register the class as rest controller, which will enable to recieve and send http request
