@@ -1,4 +1,4 @@
-package com.adhithya.app.ws;
+ package com.adhithya.app.ws;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

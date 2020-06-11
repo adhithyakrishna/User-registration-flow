@@ -9,24 +9,27 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Utils {
-	
+
 	private final Random RANDOM = new SecureRandom();
 	private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	
-	public String generateUserId(int length)
-	{
+
+	// length of our randowm user id
+	public String generateUserId(int length) {
 		return generateRandomString(length);
 	}
+
+	/*
+	 * generate string of random characters of given length, we'll randomly pickup
+	 * random alphabets n number of times.
+	 */
 	
-	private String generateRandomString(int length)
-	{
+	private String generateRandomString(int length) {
 		StringBuilder returnValue = new StringBuilder(length);
-		
-		for(int i=0; i < length; i++)
-		{
+
+		for (int i = 0; i < length; i++) {
 			returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
 		}
 		return new String(returnValue);
 	}
-	
+
 }

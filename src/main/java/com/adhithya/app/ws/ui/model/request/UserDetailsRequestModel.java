@@ -1,7 +1,12 @@
 package com.adhithya.app.ws.ui.model.request;
 
-//incoming json document to a java class
-// user information submitted to us
+/*
+ * All java code that converts incoming json object to java class
+ * is stored under the model
+ * incoming json document to a java class
+ * user information submitted to us
+ * This is a POJO
+ * */
 
 public class UserDetailsRequestModel {
 
@@ -9,31 +14,37 @@ public class UserDetailsRequestModel {
 	private String lastName;
 	private String email;
 	private String password;
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	public String getLastName() {
 		return lastName;
 	}
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
+
 }

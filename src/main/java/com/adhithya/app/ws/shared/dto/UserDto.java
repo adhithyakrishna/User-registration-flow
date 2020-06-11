@@ -2,9 +2,10 @@ package com.adhithya.app.ws.shared.dto;
 
 import java.io.Serializable;
 
-//conformation to design pattern hence serialisable
-
-// used for user information transfer between different layers
+/*
+ * used for user information transfer between different layers
+ * DTO conforms to design pattern hence serializable
+ */
 public class UserDto implements Serializable {
 	
 	private static final long serialVersionUID = 6883472850101472292L;

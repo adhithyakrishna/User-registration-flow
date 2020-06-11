@@ -10,8 +10,7 @@ import javax.persistence.Id;
 // all the data that gets persisted into a database is put into this entity package
 // where x is the name of the table to store the user records
 @Entity(name = "users")
-public class UserEntity implements Serializable
-{
+public class UserEntity implements Serializable {
 	private static final long serialVersionUID = -5074114483281689618L;
 
 	@Id // primary key and auto incremented
@@ -26,8 +25,9 @@ public class UserEntity implements Serializable
 
 	@Column(nullable = false, length = 50)
 	private String lastName;
-	
-	//@Column(nullable = false, length = 120, unique=true) //one way to make sure that the column values are always unique
+
+	// @Column(nullable = false, length = 120, unique=true) //one way to make sure
+	// that the column values are always unique
 	@Column(nullable = false, length = 120)
 	private String email;
 
@@ -36,6 +36,7 @@ public class UserEntity implements Serializable
 
 	private String emailVerificationToken;
 
+	// to make the default value as false
 	@Column(nullable = false)
 	private Boolean emailVerificationStatus = false;
 
