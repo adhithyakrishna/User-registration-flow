@@ -23,4 +23,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Long>
 {
 	// the method name should be in accordance to the pattern, the fieldname should be in capitals and we should make use of By
 	UserEntity findByEmail(String email);
+
+	UserEntity findByUserId(String userId);
 }
