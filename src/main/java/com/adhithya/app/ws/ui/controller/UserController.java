@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.adhithya.app.ws.exceptions.UserServiceException;
 import com.adhithya.app.ws.service.UserService;
 import com.adhithya.app.ws.shared.dto.UserDto;
 import com.adhithya.app.ws.ui.model.request.UserDetailsRequestModel;
+import com.adhithya.app.ws.ui.model.response.ErrorMessages;
 import com.adhithya.app.ws.ui.model.response.UserRest;
 
 /*
@@ -45,17 +47,25 @@ public class UserController {
 	/*
 	 * http post request binding is done by @GetMapping
 	 */
-	@PostMapping
+	
 	/*
 	 * @Requestbody is to read the json payload that is being sent along with the
 	 * request, we'll have to create a java bean with fields that matches with the
 	 * request body UserRest is the response model
 	 */
-	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
+	@PostMapping
+	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
 
 		// returned back to the ui
 		UserRest returnValue = new UserRest();
 
+		if(userDetails.getFirstName().isEmpty())
+		{
+			/*
+			 * Creating a specific service exception
+			 */
+			throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+		}
 		// this created userDto would be transfered across different layers
 		// data sent as a payload would be present in userDetails
 
