@@ -19,6 +19,17 @@ public class UserRest {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String message;
+
+	
+	
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	public String getUserId() {
 		return userId;

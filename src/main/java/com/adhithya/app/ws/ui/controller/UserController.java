@@ -1,5 +1,7 @@
 package com.adhithya.app.ws.ui.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
@@ -19,6 +21,7 @@ import com.adhithya.app.ws.service.UserService;
 import com.adhithya.app.ws.shared.dto.UserDto;
 import com.adhithya.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.adhithya.app.ws.ui.model.response.ErrorMessages;
+import com.adhithya.app.ws.ui.model.response.ResponseMessage;
 import com.adhithya.app.ws.ui.model.response.UserRest;
 
 import io.jsonwebtoken.Jwts;
@@ -109,10 +112,21 @@ public class UserController {
 			throw new UserServiceException(ErrorMessages.COULD_NOT_UPDATE_RECORD.getErrorMessage());
 		}
 		return returnValue;
-	}	 
-
-	@DeleteMapping
-	public String deleteUser() {
-		return "delete user was called";
 	}
+
+	@DeleteMapping(path = "/{id}")
+	public ResponseMessage deleteUser(HttpServletRequest request, @PathVariable String id) {
+
+		ResponseMessage returnVal = new ResponseMessage();
+		String token = request.getHeader(SecurityConstants.HEADER_STRING);
+
+		if (userService.validateUser(token, id) && userService.deleteUser(id)) {
+			returnVal.setMessage("User Deleted SuccessFully");
+			returnVal.setTimstamp(new Date());
+		} else {
+			throw new UserServiceException(ErrorMessages.COULD_NOT_DELETE_RECORD.getErrorMessage());
+		}
+		return returnVal;
+	}
+
 }

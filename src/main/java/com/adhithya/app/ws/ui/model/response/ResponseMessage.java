@@ -2,15 +2,15 @@ package com.adhithya.app.ws.ui.model.response;
 
 import java.util.Date;
 
-public class ErrorMessage {
+public class ResponseMessage {
 	private Date timstamp;
 	private String message;
 
-	public ErrorMessage() {
+	public ResponseMessage() {
 
 	}
 
-	public ErrorMessage(Date timstamp, String message) {
+	public ResponseMessage(Date timstamp, String message) {
 		super();
 		this.timstamp = timstamp;
 		this.message = message;
