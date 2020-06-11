@@ -1,5 +1,7 @@
 package com.adhithya.app.ws.ui.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adhithya.app.ws.exceptions.UserServiceException;
+import com.adhithya.app.ws.security.SecurityConstants;
 import com.adhithya.app.ws.service.UserService;
 import com.adhithya.app.ws.shared.dto.UserDto;
 import com.adhithya.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.adhithya.app.ws.ui.model.response.ErrorMessages;
 import com.adhithya.app.ws.ui.model.response.UserRest;
+
+import io.jsonwebtoken.Jwts;
 
 /*
  * Register the class as rest controller, which will enable to recieve and send http request
@@ -47,7 +52,7 @@ public class UserController {
 	/*
 	 * http post request binding is done by @GetMapping
 	 */
-	
+
 	/*
 	 * @Requestbody is to read the json payload that is being sent along with the
 	 * request, we'll have to create a java bean with fields that matches with the
@@ -59,8 +64,7 @@ public class UserController {
 		// returned back to the ui
 		UserRest returnValue = new UserRest();
 
-		if(userDetails.getFirstName().isEmpty())
-		{
+		if (userDetails.getFirstName().isEmpty()) {
 			/*
 			 * Creating a specific service exception
 			 */
@@ -84,10 +88,28 @@ public class UserController {
 		return returnValue;
 	}
 
-	@PutMapping
-	public String updateUser() {
-		return "update request was called";
-	}
+	/*
+	 * The id to be updated should be sent as a path variable The update can take
+	 * place only if the user has bearer authorisation token
+	 */
+	@PutMapping(path = "/{id}")
+	public UserRest updateUser(HttpServletRequest request, @PathVariable String id,
+			@RequestBody UserDetailsRequestModel userDetails) {
+
+		UserRest returnValue = new UserRest();
+		String token = request.getHeader(SecurityConstants.HEADER_STRING);
+
+		if (userService.validateUser(token, id)) {
+			UserDto userDto = new UserDto();
+			BeanUtils.copyProperties(userDetails, userDto);
+
+			UserDto updateUser = userService.updateUser(id, userDto);
+			BeanUtils.copyProperties(updateUser, returnValue);
+		} else {
+			throw new UserServiceException(ErrorMessages.COULD_NOT_UPDATE_RECORD.getErrorMessage());
+		}
+		return returnValue;
+	}	 
 
 	@DeleteMapping
 	public String deleteUser() {

@@ -12,9 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.adhithya.app.ws.io.entity.UserEntity;
 import com.adhithya.app.ws.io.repositories.UserRepository;
+import com.adhithya.app.ws.security.SecurityConstants;
 import com.adhithya.app.ws.service.UserService;
 import com.adhithya.app.ws.shared.Utils;
 import com.adhithya.app.ws.shared.dto.UserDto;
+import com.adhithya.app.ws.ui.model.request.UserDetailsRequestModel;
+
+import io.jsonwebtoken.Jwts;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -108,6 +112,42 @@ public class UserServiceImpl implements UserService {
 			
 			BeanUtils.copyProperties(userEntity, returnValue);
 			return returnValue;
+	}
+
+	@Override
+	public UserDto updateUser(String userId, UserDto userDto) {
+			UserDto returnUser = new UserDto();
+			UserEntity userEntity = userRepository.findByUserId(userId);
+			
+			if(userEntity == null)
+			{
+				throw new UsernameNotFoundException(userId);
+			}
+			
+			userEntity.setFirstName(userDto.getFirstName());
+			userEntity.setLastName(userDto.getLastName());
+			userRepository.save(userEntity);
+			
+			BeanUtils.copyProperties(userEntity, returnUser);
+			return returnUser;
+	}
+
+	@Override
+	public boolean validateUser(String token, String currentUserId) {
+		if (token != null) {
+
+			token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
+			String user = Jwts.parser().setSigningKey(SecurityConstants.getTokenSecret()).parseClaimsJws(token)
+					.getBody().getSubject();
+
+			if (user != null) {
+				UserEntity userEntity = userRepository.findByEmail(user);
+				if (userEntity.getUserId().equals(currentUserId)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
