@@ -5,6 +5,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.adhithya.app.ws.service.UserService;
@@ -41,12 +42,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
-				.permitAll().anyRequest().authenticated().and()
-				.addFilter(getAuthenticationFilter());
+				.permitAll().anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
+				.addFilter(new AuthorizationFilter(authenticationManager())).sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		/*
 		 * any request that matches /users with post shall be permitted any other
 		 * requests need to be authenticated
+		 * 
+		 * session management is configured not create a http session to make it
+		 * stateless
 		 */
 	}
 
@@ -73,3 +78,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 }
+
+/*
+ * Making the rest api stateless - when there are 5 clients communicating to a
+ * server, each client establishes a http session with the server, there are
+ * also chances that the clientside browser might cache the credentials such as
+ * authorisation token during the session, to make it stateless, spring can be
+ * configured to not create http sessions
+ * 
+ */
