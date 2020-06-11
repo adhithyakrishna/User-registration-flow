@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.adhithya.app.ws.UserRepository;
 import com.adhithya.app.ws.io.entity.UserEntity;
+import com.adhithya.app.ws.io.repositories.UserRepository;
 import com.adhithya.app.ws.service.UserService;
 import com.adhithya.app.ws.shared.Utils;
 import com.adhithya.app.ws.shared.dto.UserDto;
@@ -60,24 +60,36 @@ public class UserServiceImpl implements UserService {
 		return returnValue;
 	}
 
+	@Override
+	public UserDto getUser(String email) {
+		UserEntity userEntity = userRepository.findByEmail(email);
+
+		if (userEntity == null)
+			throw new UsernameNotFoundException(email);
+
+		UserDto returnValue = new UserDto();
+		BeanUtils.copyProperties(userEntity, returnValue);
+		return returnValue;
+	}
+
 	/*
 	 * This method is given to us by spring security when userservice class extended
-	 * UserDetailsService. The load by username function is provided by spring security as well
+	 * UserDetailsService. The load by username function is provided by spring
+	 * security as well
 	 * 
-	 * This method is used to load user information from the database using username,
-	 * In our application the unique identifier is email
+	 * This method is used to load user information from the database using
+	 * username, In our application the unique identifier is email
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-			UserEntity userEntity = userRepository.findByEmail(email);
-			if(userEntity == null)
-			{
-				//exception provided by spring framework
-				throw new UsernameNotFoundException(email);
-			}
-			
-			//user implements user details so we can return user instead of userdetails
-			return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		UserEntity userEntity = userRepository.findByEmail(email);
+		if (userEntity == null) {
+			// exception provided by spring framework
+			throw new UsernameNotFoundException(email);
+		}
+
+		// user implements user details so we can return user instead of userdetails
+		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 
 }

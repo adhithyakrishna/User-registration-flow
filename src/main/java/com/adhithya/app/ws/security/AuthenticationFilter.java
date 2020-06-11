@@ -16,6 +16,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.adhithya.app.ws.SpringApplicationContext;
+import com.adhithya.app.ws.service.UserService;
+import com.adhithya.app.ws.shared.dto.UserDto;
 import com.adhithya.app.ws.ui.model.request.UserLoginRequestModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -81,10 +84,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .compact();
         
         
-//        UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
-//        UserDto userDto = userService.getUser(userName);
+        UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
         
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-//        res.addHeader("UserID", userDto.getUserId());
+        /*
+         * We'll be needing this user id to perform subsequent requests on the database
+         */
+        res.addHeader("UserID", userDto.getUserId());
     }
 } 

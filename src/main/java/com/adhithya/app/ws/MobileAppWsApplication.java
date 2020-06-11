@@ -17,4 +17,12 @@ public class MobileAppWsApplication {
 		return new BCryptPasswordEncoder();
 	}
 
+	/*
+	 * To inititalise SpringApplicationContext we declare it as a bean
+	 */
+	@Bean
+	public SpringApplicationContext springApplicationContext()
+	{
+		return new SpringApplicationContext();
+	}
 }

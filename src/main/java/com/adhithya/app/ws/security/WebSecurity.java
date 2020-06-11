@@ -42,7 +42,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
 				.permitAll().anyRequest().authenticated().and()
-				.addFilter(new AuthenticationFilter(authenticationManager()));
+				.addFilter(getAuthenticationFilter());
 
 		/*
 		 * any request that matches /users with post shall be permitted any other
@@ -60,5 +60,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		 * AuthenticationManagerBuilder has now access to our user information
 		 */
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+	}
+
+	/*
+	 * Authentication manager by default maps the server to /user, to convert it
+	 * into /users/login we'll have to create a new instance of authentication
+	 * filter and then set the filterProcessUrl
+	 */
+	protected AuthenticationFilter getAuthenticationFilter() throws Exception {
+		final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+		filter.setFilterProcessesUrl("/users/login");
+		return filter;
 	}
 }
