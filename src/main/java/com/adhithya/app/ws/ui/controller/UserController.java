@@ -1,13 +1,16 @@
 package com.adhithya.app.ws.ui.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adhithya.app.ws.exceptions.UserServiceException;
@@ -37,28 +42,28 @@ import io.jsonwebtoken.Jwts;
  */
 @RestController
 @RequestMapping("users")
-@ConfigurationProperties(prefix="users.pagination")
+@ConfigurationProperties(prefix = "users.pagination")
 public class UserController {
 
 	@Autowired
 	PropsFromFiles propFromFiles;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	int limit = 5;
-	
+
 	public void setlimit(int limit) {
 		this.limit = limit;
 	}
+
 	/*
 	 * http get request binding is done by @GetMapping creating a submapping of
 	 * sorts by pattern mathing
 	 */
-	@GetMapping(path = "/{id}")	
+	@GetMapping(path = "/{id}")
 	public UserRest getUser(@PathVariable String id) {
 
-		
 		UserRest returnValue = new UserRest();
 
 		UserDto userDto = userService.getUserByUserId(id);
@@ -70,8 +75,6 @@ public class UserController {
 	/*
 	 * http post request binding is done by @GetMapping
 	 */
-
-	
 
 	/*
 	 * @Requestbody is to read the json payload that is being sent along with the
@@ -112,7 +115,7 @@ public class UserController {
 	 * The id to be updated should be sent as a path variable The update can take
 	 * place only if the user has bearer authorisation token
 	 */
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "/{id}", consumes = "application/json")
 	public UserRest updateUser(HttpServletRequest request, @PathVariable String id,
 			@RequestBody UserDetailsRequestModel userDetails, Principal principal) {
 
@@ -145,6 +148,29 @@ public class UserController {
 			throw new UserServiceException(ErrorMessages.COULD_NOT_DELETE_RECORD.getErrorMessage());
 		}
 		return returnVal;
+	}
+
+	/*
+	 * reading data from the request parameters
+	 */
+	@GetMapping
+	public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "limit", defaultValue = "25") int limit) {
+		List<UserRest> returnValue = new ArrayList<UserRest>();
+
+		/*
+		 * Service method returns DTO
+		 */
+		List<UserDto> users = userService.getUsers(page, limit);
+
+		for (UserDto userDto : users) {
+			UserRest userModel = new UserRest();
+			BeanUtils.copyProperties(userDto, userModel);
+			returnValue.add(userModel);
+		}
+
+		return returnValue;
+
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.adhithya.app.ws.service;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -21,4 +23,5 @@ public interface UserService extends UserDetailsService{
 	UserDto updateUser(String id, UserDto userDto);
 	boolean deleteUser(String id);
 	boolean validateUser(String token, String currentUserId);
+	List<UserDto> getUsers(int page, int limit);
 }

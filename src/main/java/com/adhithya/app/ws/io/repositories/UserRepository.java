@@ -1,6 +1,6 @@
  package com.adhithya.app.ws.io.repositories;
-
-import org.springframework.data.repository.CrudRepository;
+ 
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.adhithya.app.ws.io.entity.UserEntity;
@@ -19,7 +19,7 @@ import com.adhithya.app.ws.io.entity.UserEntity;
 
 //in addition to the functions present in the crudrespository we can make use of our own business logic within this class 
 @Repository
-public interface UserRepository extends CrudRepository<UserEntity, Long> 
+public interface UserRepository extends PagingAndSortingRepository<UserEntity, Long> 
 {
 	// the method name should be in accordance to the pattern, the fieldname should be in capitals and we should make use of By
 	UserEntity findByEmail(String email);
