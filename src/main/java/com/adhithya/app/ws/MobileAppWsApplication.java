@@ -1,14 +1,21 @@
 package com.adhithya.app.ws;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.adhithya.app.ws.security.AppProperties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @SpringBootApplication
 public class MobileAppWsApplication {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public static void main(String[] args) {
 		SpringApplication.run(MobileAppWsApplication.class, args);
@@ -33,4 +40,5 @@ public class MobileAppWsApplication {
 	{
 		return new AppProperties();
 	}
+	
 }
