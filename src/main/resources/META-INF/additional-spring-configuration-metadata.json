@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "users.pagination.limit",
+  "type": "java.lang.Integer",
+  "description": "limit the number of users to be fetched"
+}]}

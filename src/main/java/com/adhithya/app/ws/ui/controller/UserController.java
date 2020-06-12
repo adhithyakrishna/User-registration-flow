@@ -1,11 +1,13 @@
 package com.adhithya.app.ws.ui.controller;
 
+import java.security.Principal;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adhithya.app.ws.exceptions.UserServiceException;
+import com.adhithya.app.ws.security.PropsFromFiles;
 import com.adhithya.app.ws.security.SecurityConstants;
 import com.adhithya.app.ws.service.UserService;
 import com.adhithya.app.ws.shared.dto.UserDto;
@@ -29,21 +32,33 @@ import io.jsonwebtoken.Jwts;
 /*
  * Register the class as rest controller, which will enable to recieve and send http request
  * Request mapping, mapps the uri
+ * 
+ * @ConfigurationProperties read the properties from application properties and use them directly
  */
 @RestController
 @RequestMapping("users")
+@ConfigurationProperties(prefix="users.pagination")
 public class UserController {
 
 	@Autowired
+	PropsFromFiles propFromFiles;
+	
+	@Autowired
 	UserService userService;
-
+	
+	int limit = 5;
+	
+	public void setlimit(int limit) {
+		this.limit = limit;
+	}
 	/*
 	 * http get request binding is done by @GetMapping creating a submapping of
 	 * sorts by pattern mathing
 	 */
-	@GetMapping(path = "/{id}")
+	@GetMapping(path = "/{id}")	
 	public UserRest getUser(@PathVariable String id) {
 
+		
 		UserRest returnValue = new UserRest();
 
 		UserDto userDto = userService.getUserByUserId(id);
@@ -55,6 +70,8 @@ public class UserController {
 	/*
 	 * http post request binding is done by @GetMapping
 	 */
+
+	
 
 	/*
 	 * @Requestbody is to read the json payload that is being sent along with the
@@ -97,8 +114,9 @@ public class UserController {
 	 */
 	@PutMapping(path = "/{id}")
 	public UserRest updateUser(HttpServletRequest request, @PathVariable String id,
-			@RequestBody UserDetailsRequestModel userDetails) {
+			@RequestBody UserDetailsRequestModel userDetails, Principal principal) {
 
+		String emailId = principal.getName();
 		UserRest returnValue = new UserRest();
 		String token = request.getHeader(SecurityConstants.HEADER_STRING);
 
